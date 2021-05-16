@@ -1,6 +1,5 @@
 extern crate guardian_backend;
 
-use diesel::r2d2::ConnectionManager;
 use guardian_backend::data::database_pool;
 
 #[test]
