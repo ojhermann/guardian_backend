@@ -22,4 +22,15 @@ impl Gurl {
             .bind::<sql_types::Text, _>(url_value)
             .load(&pooled_connection)
     }
+
+    pub fn insert(
+        url_value: String,
+        liked: bool,
+        pooled_connection: PooledConnection<ConnectionManager<PgConnection>>,
+    ) -> QueryResult<usize> {
+        sql_query("SELECT public.insert_gurl($1, $2)")
+            .bind::<sql_types::Text, _>(url_value)
+            .bind::<sql_types::Bool, _>(liked)
+            .execute(&pooled_connection)
+    }
 }
