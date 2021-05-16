@@ -33,4 +33,13 @@ impl Gurl {
             .bind::<sql_types::Bool, _>(liked)
             .execute(&pooled_connection)
     }
+
+    pub fn delete(
+        id_value: i32,
+        pooled_connection: PooledConnection<ConnectionManager<PgConnection>>,
+    ) -> QueryResult<usize> {
+        sql_query("SELECT public.delete_gurl($1)")
+            .bind::<sql_types::Integer, _>(id_value)
+            .execute(&pooled_connection)
+    }
 }
