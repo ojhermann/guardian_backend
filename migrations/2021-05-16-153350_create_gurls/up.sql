@@ -1,5 +1,5 @@
 -- Your SQL goes here
-CREATE TABLE gurls (
+CREATE TABLE public.gurls (
     id SERIAL,
     url TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
