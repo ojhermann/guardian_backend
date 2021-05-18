@@ -1,13 +1,44 @@
 use crate::data::database_pool::DatabasePool;
 use crate::data::gurl::Gurl;
-use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpResponse, Resource};
 
-pub fn configure(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::resource("/gurl/get/{url_value}").route(web::get().to(get_gurl)))
-        .service(
-            web::resource("/gurl/insert/{url_value}/{liked}").route(web::get().to(insert_gurl)),
-        )
-        .service(web::resource("/gurl/delete/{id_value}").route(web::get().to(delete_gurl)));
+pub struct GurlApi {}
+
+impl GurlApi {
+    pub fn configure(sc: &mut web::ServiceConfig) {
+        sc.service(GurlPath::DELETE.configure())
+            .service(GurlPath::GET.configure())
+            .service(GurlPath::INSERT.configure());
+    }
+}
+
+enum GurlPath {
+    DELETE,
+    GET,
+    INSERT,
+}
+
+impl GurlPath {
+    fn value(&self) -> String {
+        let value = match self {
+            GurlPath::DELETE => "/gurl/delete/{id_value}",
+            GurlPath::GET => "/gurl/get/{url_value}",
+            GurlPath::INSERT => "/gurl/insert/{url_value}/{liked}",
+        };
+        value.to_string()
+    }
+
+    fn configure(&self) -> Resource {
+        match self {
+            GurlPath::DELETE => {
+                web::resource(GurlPath::DELETE.value()).route(web::get().to(delete_gurl))
+            }
+            GurlPath::GET => web::resource(GurlPath::GET.value()).route(web::get().to(get_gurl)),
+            GurlPath::INSERT => {
+                web::resource(GurlPath::INSERT.value()).route(web::get().to(insert_gurl))
+            }
+        }
+    }
 }
 
 pub async fn delete_gurl(

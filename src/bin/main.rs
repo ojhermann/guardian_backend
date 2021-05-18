@@ -1,4 +1,5 @@
 use actix_web::{App, HttpServer};
+use guardian_backend::api::v1::gurl::GurlApi;
 use guardian_backend::data::database_pool;
 use std::io;
 
@@ -11,7 +12,7 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(database_pool.clone())
-            .configure(guardian_backend::api::v1::gurl::configure)
+            .configure(GurlApi::configure)
     })
     .bind("127.0.0.1:8080")?
     .run()
