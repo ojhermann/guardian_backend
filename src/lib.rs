@@ -19,4 +19,5 @@ pub mod schema;
 
 pub mod server {
     pub mod guardian_server;
+    pub mod paths;
 }
