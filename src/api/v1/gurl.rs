@@ -2,6 +2,11 @@ use crate::data::database_pool::DatabasePool;
 use crate::data::gurl::Gurl;
 use actix_web::{web, HttpResponse, Resource};
 
+//todo create server package
+//todo integration tests of GurlApi
+//todo why only get routes working?  e.g. web::get() but not web::post()
+//todo return error message in method errors
+
 pub struct GurlApi {}
 
 impl GurlApi {
