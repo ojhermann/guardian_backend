@@ -1,5 +1,5 @@
 use crate::data::database_pool::DatabasePool;
-use crate::data::gurl::Gurl;
+use crate::data::gurl::{Gurl, PooledConn};
 use actix_web::{web, HttpResponse};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -24,9 +24,7 @@ pub async fn get_gurl(
 ) -> HttpResponse {
     let url = json.into_inner().url;
 
-    let pooled_connection = database_pool
-        .get()
-        .expect("get_gurl_json: could not obtain a connection from the pool");
+    let pooled_connection = get_pooled_connection(database_pool, "delete_gurl");
 
     let gurls_result = web::block(move || Gurl::get(url, &pooled_connection)).await;
 
@@ -42,9 +40,7 @@ pub async fn delete_gurl(
 ) -> HttpResponse {
     let id_value = json.into_inner().id;
 
-    let pooled_connection = database_pool
-        .get()
-        .expect("get_gurl: could not obtain a connection from the pool");
+    let pooled_connection = get_pooled_connection(database_pool, "get_gurl");
 
     let delete_result = web::block(move || Gurl::delete(id_value, &pooled_connection)).await;
 
@@ -62,15 +58,23 @@ pub async fn insert_gurl(
     let url_value = insert_gurl.url;
     let liked = insert_gurl.liked;
 
-    let pooled_connection = database_pool
-        .get()
-        .expect("insert_gurl: could not obtain a connection from the pool");
+    let pooled_connection = get_pooled_connection(database_pool, "insert_gurl");
 
     let insert_result =
         web::block(move || Gurl::insert(url_value, liked, &pooled_connection)).await;
 
     match insert_result {
-        Ok(number_of_inserts) => HttpResponse::Ok().json(number_of_inserts),
+        Ok(number_of_inserts) => HttpResponse::Created().json(number_of_inserts),
         Err(_e) => HttpResponse::InternalServerError().finish(),
     }
+}
+
+fn get_pooled_connection(
+    database_pool: actix_web::web::Data<DatabasePool>,
+    function_name: &str,
+) -> PooledConn {
+    function_name
+        .to_owned()
+        .push_str(": could not obtain a connection from the pool");
+    database_pool.get().expect(&*function_name)
 }
