@@ -1,4 +1,4 @@
-use crate::api::v1::gurl::{GurlApi, get_gurl, delete_gurl, insert_gurl};
+use crate::api::v1::gurl::{delete_gurl, get_gurl, insert_gurl};
 use crate::data::database_pool;
 use actix_web::{middleware, web, App, HttpServer};
 
@@ -24,11 +24,14 @@ impl GuardianServer {
             App::new()
                 .data(database_pool.clone())
                 .wrap(middleware::Logger::default())
-                .service(web::resource("/gurl/{gurl_value_or_id}")
-                    .route(web::get().to(get_gurl))
-                    .route(web::delete().to(delete_gurl)))
-                .service(web::resource("/gurl/{gurl_value}/{liked}")
-                    .route(web::post().to(insert_gurl)))
+                .service(
+                    web::resource("/gurl/{url_value_or_id}")
+                        .route(web::get().to(get_gurl))
+                        .route(web::delete().to(delete_gurl)),
+                )
+                .service(
+                    web::resource("/gurl/{url_value}/{liked}").route(web::post().to(insert_gurl)),
+                )
         })
         .bind((&*self.ip_address, self.port))?
         .workers(self.workers)
