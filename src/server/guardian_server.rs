@@ -1,6 +1,6 @@
-use crate::api::v1::gurl::GurlApi;
+use crate::api::v1::gurl::{GurlApi, get_gurl, delete_gurl, insert_gurl};
 use crate::data::database_pool;
-use actix_web::{App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 
 pub struct GuardianServer {
     database_url_key: String,
@@ -10,22 +10,30 @@ pub struct GuardianServer {
 }
 
 impl GuardianServer {
-    pub fn new() -> GuardianServerBuilder {
-        GuardianServerBuilder::new()
+    pub fn from_builder() -> GuardianServerBuilder {
+        GuardianServerBuilder::default()
     }
 
     pub async fn run(&self) -> std::io::Result<()> {
+        std::env::set_var("RUST_LOG", "actix_web=info");
+        env_logger::init();
+
         let database_pool = database_pool::get(&*self.database_url_key);
 
         HttpServer::new(move || {
             App::new()
                 .data(database_pool.clone())
-                .configure(GurlApi::configure)
+                .wrap(middleware::Logger::default())
+                .service(web::resource("/gurl/{gurl_value_or_id}")
+                    .route(web::get().to(get_gurl))
+                    .route(web::delete().to(delete_gurl)))
+                .service(web::resource("/gurl/{gurl_value}/{liked}")
+                    .route(web::post().to(insert_gurl)))
         })
-            .bind((&*self.ip_address, self.port))?
-            .workers(   self.workers)
-            .run()
-            .await
+        .bind((&*self.ip_address, self.port))?
+        .workers(self.workers)
+        .run()
+        .await
     }
 }
 
@@ -37,7 +45,7 @@ pub struct GuardianServerBuilder {
 }
 
 impl GuardianServerBuilder {
-    pub fn new() -> Self {
+    pub fn default() -> Self {
         Self {
             database_url_key: String::from("DATABASE_URL"),
             ip_address: String::from("127.0.0.1"),
@@ -67,7 +75,7 @@ impl GuardianServerBuilder {
     }
 
     pub fn build(self) -> GuardianServer {
-        GuardianServer{
+        GuardianServer {
             database_url_key: self.database_url_key,
             ip_address: self.ip_address,
             port: self.port,

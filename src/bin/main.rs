@@ -4,7 +4,7 @@ use guardian_backend::server::guardian_server::GuardianServer;
 async fn main() -> std::io::Result<()> {
     dotenv::dotenv().ok();
 
-    let gs = GuardianServer::new()
+    let gs = GuardianServer::from_builder()
         .database_url_key("DATABASE_URL")
         .ip_address("127.0.0.1")
         .port(8080)
