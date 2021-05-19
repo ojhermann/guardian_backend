@@ -1,6 +1,6 @@
+use crate::api::v1::gurl::GurlApi;
 use crate::data::database_pool;
 use actix_web::{App, HttpServer};
-use crate::api::v1::gurl::GurlApi;
 
 pub struct GuardianServer {
     database_url_key: String,
