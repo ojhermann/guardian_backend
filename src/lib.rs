@@ -16,3 +16,7 @@ pub mod data {
 }
 
 pub mod schema;
+
+pub mod server {
+    pub mod guardian_server;
+}
