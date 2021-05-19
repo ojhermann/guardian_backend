@@ -1,6 +1,6 @@
 use crate::api::v1::gurl::{delete_gurl, get_gurl, insert_gurl};
-use crate::server::paths;
 use crate::data::database_pool;
+use crate::server::paths;
 use actix_web::{middleware, web, App, HttpServer};
 
 pub struct GuardianServer {
@@ -8,6 +8,8 @@ pub struct GuardianServer {
     ip_address: String,
     port: u16,
     workers: usize,
+    logging_key: String,
+    logging_value: String,
 }
 
 impl GuardianServer {
@@ -16,7 +18,7 @@ impl GuardianServer {
     }
 
     pub async fn run(&self) -> std::io::Result<()> {
-        std::env::set_var("RUST_LOG", "actix_web=info");
+        std::env::set_var(&*self.logging_key, &*self.logging_value);
         env_logger::init();
 
         let database_pool = database_pool::get(&*self.database_url_key);
@@ -30,9 +32,7 @@ impl GuardianServer {
                         .route(web::get().to(get_gurl))
                         .route(web::delete().to(delete_gurl)),
                 )
-                .service(
-                    web::resource(paths::GURL_POST).route(web::post().to(insert_gurl)),
-                )
+                .service(web::resource(paths::GURL_POST).route(web::post().to(insert_gurl)))
         })
         .bind((&*self.ip_address, self.port))?
         .workers(self.workers)
@@ -46,6 +46,8 @@ pub struct GuardianServerBuilder {
     ip_address: String,
     port: u16,
     workers: usize,
+    logging_key: String,
+    logging_value: String,
 }
 
 impl GuardianServerBuilder {
@@ -55,6 +57,8 @@ impl GuardianServerBuilder {
             ip_address: String::from("127.0.0.1"),
             port: 8080,
             workers: 8,
+            logging_key: String::from("RUST_LOG"),
+            logging_value: String::from("actix_web=info"),
         }
     }
 
@@ -78,12 +82,24 @@ impl GuardianServerBuilder {
         self
     }
 
+    pub fn logging_key(mut self, logging_key: String) -> Self {
+        self.logging_key = logging_key;
+        self
+    }
+
+    pub fn logging_value(mut self, logging_value: String) -> Self {
+        self.logging_value = logging_value;
+        self
+    }
+
     pub fn build(self) -> GuardianServer {
         GuardianServer {
             database_url_key: self.database_url_key,
             ip_address: self.ip_address,
             port: self.port,
             workers: self.workers,
+            logging_key: self.logging_key,
+            logging_value: self.logging_value,
         }
     }
 }
