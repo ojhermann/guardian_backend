@@ -70,7 +70,7 @@ pub async fn insert_gurl(
         web::block(move || Gurl::insert(url_value, liked, &pooled_connection)).await;
 
     match insert_result {
-        Ok(number_of_inserts) => HttpResponse::Ok().json(number_of_inserts),
+        Ok(number_of_inserts) => HttpResponse::Created().json(number_of_inserts),
         Err(_e) => HttpResponse::InternalServerError().finish(),
     }
 }
