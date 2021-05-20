@@ -6,7 +6,7 @@ pub enum GurlError<E>
 where
     E: Debug,
 {
-    ActixBlockingError(actix_web::error::BlockingError<E>),
+    BlockingError(actix_web::error::BlockingError<E>),
     DatabaseError(diesel::result::Error),
 }
 
@@ -21,8 +21,8 @@ where
 {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            GurlError::ActixBlockingError(e) => write!(f, "ActixBlockingError: {:?}", e),
-            GurlError::DatabaseError(e) => write!(f, "DatabaseError: {:?}", e),
+            GurlError::BlockingError(e) => write!(f, "GurlError::BlockingError: {:?}", e),
+            GurlError::DatabaseError(e) => write!(f, "GurlError::DatabaseError: {:?}", e),
         }
     }
 }
@@ -32,7 +32,7 @@ where
     E: Debug,
 {
     fn from(e: BlockingError<E>) -> Self {
-        GurlError::ActixBlockingError(e)
+        GurlError::BlockingError(e)
     }
 }
 
@@ -51,7 +51,7 @@ where
 {
     fn status_code(&self) -> actix_web::http::StatusCode {
         match self {
-            GurlError::ActixBlockingError(_e) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
+            GurlError::BlockingError(_e) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
             GurlError::DatabaseError(_e) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
         }
     }
@@ -60,7 +60,7 @@ where
         let error = format!("{}", self);
 
         let mut builder = match self {
-            GurlError::ActixBlockingError(_e) => actix_web::HttpResponse::InternalServerError(),
+            GurlError::BlockingError(_e) => actix_web::HttpResponse::InternalServerError(),
             GurlError::DatabaseError(_e) => actix_web::HttpResponse::InternalServerError(),
         };
 
