@@ -1,7 +1,17 @@
+use crate::api::v1::paths;
 use crate::data::database_pool::DatabasePool;
 use crate::data::gurl::Gurl;
 use crate::data::gurl_error::GurlError;
 use actix_web::{web, HttpResponse};
+
+pub fn configure(cfg: &mut web::ServiceConfig) {
+    cfg.service(
+        web::resource(paths::GURL)
+            .route(web::delete().to(delete_gurl))
+            .route(web::get().to(get_gurl))
+            .route(web::post().to(insert_gurl)),
+    );
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DeleteGurl {
