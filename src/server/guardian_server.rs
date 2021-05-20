@@ -1,7 +1,6 @@
-use crate::api::v1::gurl::{delete_gurl, get_gurl, insert_gurl};
+use crate::api;
 use crate::data::database_pool;
-use crate::server::paths;
-use actix_web::{middleware, web, App, HttpServer};
+use actix_web::{middleware, App, HttpServer};
 
 pub struct GuardianServer {
     database_url_key: String,
@@ -27,12 +26,7 @@ impl GuardianServer {
             App::new()
                 .data(database_pool.clone())
                 .wrap(middleware::Logger::default())
-                .service(
-                    web::resource(paths::GURL)
-                        .route(web::delete().to(delete_gurl))
-                        .route(web::get().to(get_gurl))
-                        .route(web::post().to(insert_gurl)),
-                )
+                .configure(api::v1::gurl::configure)
         })
         .bind((&*self.ip_address, self.port))?
         .workers(self.workers)

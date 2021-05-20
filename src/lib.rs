@@ -6,6 +6,7 @@ extern crate serde_derive;
 pub mod api {
     pub mod v1 {
         pub mod gurl;
+        pub mod paths;
     }
 }
 
@@ -19,5 +20,4 @@ pub mod schema;
 
 pub mod server {
     pub mod guardian_server;
-    pub mod paths;
 }
