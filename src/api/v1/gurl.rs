@@ -1,5 +1,6 @@
 use crate::data::database_pool::DatabasePool;
 use crate::data::gurl::{Gurl, PooledConn};
+use crate::data::gurl_error::GurlError;
 use actix_web::{web, HttpResponse};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -30,7 +31,10 @@ pub async fn get_gurl(
 
     match gurls_result {
         Ok(vector_of_gurls) => HttpResponse::Ok().json(vector_of_gurls),
-        Err(_e) => HttpResponse::InternalServerError().finish(),
+        Err(e) => {
+            log::error!("{}", GurlError::BlockingError(e));
+            HttpResponse::InternalServerError().finish()
+        }
     }
 }
 
@@ -46,7 +50,10 @@ pub async fn delete_gurl(
 
     match delete_result {
         Ok(number_of_deletions) => HttpResponse::Ok().json(number_of_deletions),
-        Err(_e) => HttpResponse::InternalServerError().finish(),
+        Err(e) => {
+            log::error!("{}", GurlError::BlockingError(e));
+            HttpResponse::InternalServerError().finish()
+        }
     }
 }
 
@@ -65,7 +72,10 @@ pub async fn insert_gurl(
 
     match insert_result {
         Ok(number_of_inserts) => HttpResponse::Created().json(number_of_inserts),
-        Err(_e) => HttpResponse::InternalServerError().finish(),
+        Err(e) => {
+            log::error!("{}", GurlError::BlockingError(e));
+            HttpResponse::InternalServerError().finish()
+        }
     }
 }
 
