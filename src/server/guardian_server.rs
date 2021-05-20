@@ -29,8 +29,8 @@ impl GuardianServer {
                 .wrap(middleware::Logger::default())
                 .service(
                     web::resource(paths::GURL)
-                        .route(web::get().to(get_gurl))
                         .route(web::delete().to(delete_gurl))
+                        .route(web::get().to(get_gurl))
                         .route(web::post().to(insert_gurl)),
                 )
         })
