@@ -6,6 +6,6 @@ mod data_tests {
 mod api_tests {
     pub mod v1_tests {
         pub mod check_ok_tests;
-        pub mod gurls_tests;
+        pub mod gurl_tests;
     }
 }

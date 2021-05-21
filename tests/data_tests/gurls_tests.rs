@@ -17,7 +17,7 @@ pub fn insert_get_and_delete_work() {
     id_values
         .iter()
         .for_each(|id_value| delete_works(&dp, *id_value));
-    
+
     get_works(&dp, url_value, 0);
 }
 
