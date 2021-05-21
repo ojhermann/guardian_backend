@@ -1,4 +1,2 @@
 # guardian_backend
-Backend for Guardian-related activities.
-
-I'm migrating elements of an existing project to use Rust, Actix, and Diesel.  Comments and suggestions are welcome.
+I'm migrating elements of an existing project to use Rust, Actix, and Diesel; comments and suggestions are welcome.
