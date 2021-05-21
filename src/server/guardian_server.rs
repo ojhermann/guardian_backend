@@ -26,6 +26,7 @@ impl GuardianServer {
             App::new()
                 .data(database_pool.clone())
                 .wrap(middleware::Logger::default())
+                .configure(api::v1::check_ok::configure)
                 .configure(api::v1::gurl::configure)
         })
         .bind((&*self.ip_address, self.port))?

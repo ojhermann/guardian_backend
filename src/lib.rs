@@ -5,6 +5,7 @@ extern crate serde_derive;
 
 pub mod api {
     pub mod v1 {
+        pub mod check_ok;
         pub mod gurl;
         pub mod paths;
     }
