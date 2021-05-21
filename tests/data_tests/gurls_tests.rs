@@ -3,27 +3,21 @@ use guardian_backend::data::gurl::Gurl;
 
 #[test]
 pub fn insert_get_and_delete_work() {
-    // use .env
     dotenv::dotenv().ok();
 
-    // establish fixed values
     let database_url_key = "DATABASE_URL";
     let url_value = "insert_get_and_delete_work";
     let dp = database_pool::get(database_url_key);
 
-    // add two urls
     insert_works(&dp, url_value);
     insert_works(&dp, url_value);
 
-    // get urls with url_value
     let id_values = get_works(&dp, url_value, 2);
 
-    // delete all urls with url_value
     id_values
         .iter()
         .for_each(|id_value| delete_works(&dp, *id_value));
-
-    // confirm there are no rows in gurls with the url_value
+    
     get_works(&dp, url_value, 0);
 }
 
