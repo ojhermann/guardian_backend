@@ -1,5 +1,5 @@
 use crate::api;
-use crate::data::database_pool;
+use crate::data::v1::database_pool;
 use actix_web::{middleware, App, HttpServer};
 
 pub struct GuardianServer {

@@ -12,9 +12,17 @@ pub mod api {
 }
 
 pub mod data {
-    pub mod database_pool;
-    pub mod gurl;
-    pub mod gurl_error;
+    pub mod v1 {
+        pub mod database_pool;
+        pub mod gurl;
+    }
+}
+
+pub mod models {
+    pub mod v1 {
+        pub mod gurl;
+        pub mod gurl_error;
+    }
 }
 
 pub mod schema;
