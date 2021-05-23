@@ -1,7 +1,7 @@
 use actix_web::{test, App};
 use guardian_backend::api;
 use guardian_backend::data::database_pool;
-use guardian_backend::data::gurl::Gurl;
+use guardian_backend::models::gurl::Gurl;
 
 #[actix_rt::test]
 pub async fn gurl_works() {

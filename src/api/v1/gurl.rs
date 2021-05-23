@@ -1,7 +1,7 @@
 use crate::api::v1::paths;
 use crate::data::database_pool::DatabasePool;
-use crate::data::gurl::Gurl;
 use crate::data::gurl_error::GurlError;
+use crate::models::gurl::Gurl;
 use actix_web::{web, HttpResponse};
 
 pub fn configure(cfg: &mut web::ServiceConfig) {

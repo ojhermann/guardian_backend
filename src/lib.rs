@@ -17,6 +17,10 @@ pub mod data {
     pub mod gurl_error;
 }
 
+pub mod models {
+    pub mod gurl;
+}
+
 pub mod schema;
 
 pub mod server {
