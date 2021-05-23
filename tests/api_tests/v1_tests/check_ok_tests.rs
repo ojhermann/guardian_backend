@@ -1,6 +1,6 @@
 use actix_web::{test, App};
 use guardian_backend::api;
-use guardian_backend::data::database_pool;
+use guardian_backend::data::v1::database_pool;
 
 #[actix_rt::test]
 pub async fn check_ok_works() {

@@ -1,4 +1,4 @@
-use guardian_backend::data::database_pool::{self, DatabasePool};
+use guardian_backend::data::v1::database_pool::{self, DatabasePool};
 use guardian_backend::models::v1::gurl::Gurl;
 
 #[test]

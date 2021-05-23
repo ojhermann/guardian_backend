@@ -1,5 +1,5 @@
 use crate::api::v1::paths;
-use crate::data::database_pool::DatabasePool;
+use crate::data::v1::database_pool::DatabasePool;
 use crate::models::v1::gurl::{DeleteGurl, GetGurl, Gurl, InsertGurl};
 use crate::models::v1::gurl_error::GurlError;
 use actix_web::{web, HttpResponse};

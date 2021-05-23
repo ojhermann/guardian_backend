@@ -1,6 +1,6 @@
 use actix_web::{test, App};
 use guardian_backend::api;
-use guardian_backend::data::database_pool;
+use guardian_backend::data::v1::database_pool;
 use guardian_backend::models::v1::gurl::{DeleteGurl, GetGurl, Gurl, InsertGurl};
 
 #[actix_rt::test]

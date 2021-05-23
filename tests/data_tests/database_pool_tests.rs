@@ -1,6 +1,6 @@
 extern crate guardian_backend;
 
-use guardian_backend::data::database_pool;
+use guardian_backend::data::v1::database_pool;
 
 #[test]
 pub fn it_can_connect() {
