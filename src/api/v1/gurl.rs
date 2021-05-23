@@ -1,6 +1,6 @@
 use crate::api::v1::paths;
 use crate::data::database_pool::DatabasePool;
-use crate::data::gurl_error::GurlError;
+use crate::models::v1::gurl_error::GurlError;
 use crate::models::v1::gurl::{Gurl, DeleteGurl, GetGurl, InsertGurl};
 use actix_web::{web, HttpResponse};
 
