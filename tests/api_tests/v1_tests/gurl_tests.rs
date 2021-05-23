@@ -1,7 +1,7 @@
 use actix_web::{test, App};
 use guardian_backend::api;
 use guardian_backend::data::database_pool;
-use guardian_backend::models::gurl::Gurl;
+use guardian_backend::models::gurl::{Gurl, InsertGurl, GetGurl, DeleteGurl};
 
 #[actix_rt::test]
 pub async fn gurl_works() {
@@ -21,7 +21,7 @@ pub async fn gurl_works() {
     let liked_test_value: bool = false;
 
     // test insert
-    let insert_gurl_test_struct = api::v1::gurl::InsertGurl {
+    let insert_gurl_test_struct = InsertGurl {
         url: url_test_value.clone(),
         liked: liked_test_value,
     };
@@ -35,7 +35,7 @@ pub async fn gurl_works() {
     assert_eq!(number_of_insertions, 1);
 
     // test get with value known to exist
-    let get_gurl_test_struct = api::v1::gurl::GetGurl {
+    let get_gurl_test_struct = GetGurl {
         url: url_test_value.clone(),
     };
     let request_get = test::TestRequest::get()
@@ -50,7 +50,7 @@ pub async fn gurl_works() {
 
     // test delete
     let gurl_id = vector_of_gurls[0].id;
-    let delete_gurl_test_struct = api::v1::gurl::DeleteGurl { id: gurl_id };
+    let delete_gurl_test_struct = DeleteGurl { id: gurl_id };
     let request_delete_gurl = test::TestRequest::delete()
         .uri(api::v1::paths::GURL)
         .set_json(&delete_gurl_test_struct)
