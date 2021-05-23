@@ -1,5 +1,5 @@
 use guardian_backend::data::database_pool::{self, DatabasePool};
-use guardian_backend::models::gurl::Gurl;
+use guardian_backend::models::v1::gurl::Gurl;
 
 #[test]
 pub fn insert_get_and_delete_work() {

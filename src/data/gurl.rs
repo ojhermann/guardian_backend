@@ -1,4 +1,4 @@
-use crate::models::gurl::Gurl;
+use crate::models::v1::gurl::Gurl;
 use diesel::{
     r2d2::{ConnectionManager, PooledConnection},
     sql_query, sql_types, PgConnection, QueryResult, RunQueryDsl,

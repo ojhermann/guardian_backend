@@ -18,7 +18,9 @@ pub mod data {
 }
 
 pub mod models {
-    pub mod gurl;
+    pub mod v1 {
+        pub mod gurl;
+    }
 }
 
 pub mod schema;
