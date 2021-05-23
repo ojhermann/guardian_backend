@@ -1,7 +1,7 @@
 use actix_web::{test, App};
 use guardian_backend::api;
 use guardian_backend::data::database_pool;
-use guardian_backend::models::v1::gurl::{Gurl, InsertGurl, GetGurl, DeleteGurl};
+use guardian_backend::models::v1::gurl::{DeleteGurl, GetGurl, Gurl, InsertGurl};
 
 #[actix_rt::test]
 pub async fn gurl_works() {
