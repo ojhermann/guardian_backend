@@ -21,6 +21,33 @@ pub fn insert_get_and_delete_work() {
     get_works(&dp, url_value, 0);
 }
 
+#[test]
+pub fn get_most_recently_added_gurl_works() {
+    dotenv::dotenv().ok();
+
+    let database_url_key = "DATABASE_URL";
+    let url_value = "get_most_recently_added_gurl_works";
+    let dp = database_pool::get(database_url_key);
+
+    let pooled_connection = dp.get().unwrap();
+    let _insert_result = Gurl::insert(url_value.to_string(), true, &pooled_connection);
+
+    let get_query_result = Gurl::get(url_value.to_string(), &pooled_connection);
+    assert!(get_query_result.is_ok());
+    let vec_of_gurls = get_query_result.unwrap();
+    assert_eq!(vec_of_gurls.len(), 1);
+    let id_of_most_recently_added_gurl = vec_of_gurls.get(0).unwrap().id;
+
+    let tested_fnc_query_result = Gurl::get_most_recently_added_gurl(&pooled_connection);
+    assert!(tested_fnc_query_result.is_ok());
+    let vec_of_results = tested_fnc_query_result.unwrap();
+    assert_eq!(vec_of_results.len(), 1);
+    let id_of_tested_query = vec_of_results.get(0).unwrap().id;
+    assert_eq!(id_of_most_recently_added_gurl, id_of_tested_query);
+
+    let _delete_result = Gurl::delete(id_of_most_recently_added_gurl, &pooled_connection);
+}
+
 fn insert_works(dp: &DatabasePool, url_value: &str) {
     let pooled_connection = dp.get().unwrap();
     let insert_result = Gurl::insert(url_value.to_string(), true, &pooled_connection);

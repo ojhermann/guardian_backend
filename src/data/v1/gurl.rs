@@ -19,6 +19,13 @@ impl Gurl {
             .load(pooled_connection)
     }
 
+    pub fn get_most_recently_added_gurl(pooled_connection: &PooledConn) -> QueryResult<Vec<Gurl>> {
+        // sql_query return type can only be a struct which implements QueryableByName
+        // https://docs.rs/diesel/1.4.6/diesel/query_dsl/trait.RunQueryDsl.html#method.load
+        // https://docs.rs/diesel/1.4.6/diesel/fn.sql_query.html
+        sql_query("SELECT * FROM public.get_most_recently_added_gurl()").load(pooled_connection)
+    }
+
     pub fn insert(
         url_value: String,
         liked: bool,

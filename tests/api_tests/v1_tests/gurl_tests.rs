@@ -42,14 +42,26 @@ pub async fn gurl_works() {
         .uri(api::v1::paths::GURL)
         .set_json(&get_gurl_test_struct)
         .to_request();
-    let resonse_get_gurl = test::call_service(&mut guardian_service, request_get).await;
-    assert!(resonse_get_gurl.status().is_success());
-    let vector_of_gurls: Vec<Gurl> = test::read_body_json(resonse_get_gurl).await;
+    let response_get_gurl = test::call_service(&mut guardian_service, request_get).await;
+    assert!(response_get_gurl.status().is_success());
+    let vector_of_gurls: Vec<Gurl> = test::read_body_json(response_get_gurl).await;
     assert_eq!(vector_of_gurls.len(), 1);
     assert_eq!(vector_of_gurls[0].url, url_test_value);
 
-    // test delete
+    // test get_most_recently_added_gurl
     let gurl_id = vector_of_gurls[0].id;
+    let request_get_most_recently_added_gurl = test::TestRequest::get()
+        .uri(api::v1::paths::GURL_MOST_RECENTLY_ADDED)
+        .to_request();
+    let response_get_most_recently_added_gurl =
+        test::call_service(&mut guardian_service, request_get_most_recently_added_gurl).await;
+    assert!(response_get_most_recently_added_gurl.status().is_success());
+    let most_recently_added_gurl_maybe: Option<Gurl> =
+        test::read_body_json(response_get_most_recently_added_gurl).await;
+    assert!(most_recently_added_gurl_maybe.is_some());
+    assert_eq!(most_recently_added_gurl_maybe.unwrap().id, gurl_id);
+
+    // test delete
     let delete_gurl_test_struct = DeleteGurl { id: gurl_id };
     let request_delete_gurl = test::TestRequest::delete()
         .uri(api::v1::paths::GURL)

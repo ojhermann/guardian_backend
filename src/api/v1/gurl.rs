@@ -10,6 +10,10 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
             .route(web::delete().to(delete_gurl))
             .route(web::get().to(get_gurl))
             .route(web::post().to(insert_gurl)),
+    )
+    .service(
+        web::resource(paths::GURL_MOST_RECENTLY_ADDED)
+            .route(web::get().to(get_most_recently_added_gurl)),
     );
 }
 
@@ -54,6 +58,27 @@ pub async fn get_gurl(
         }
         Err(e) => {
             log::error!("get_gurl: {}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
+}
+
+pub async fn get_most_recently_added_gurl(database_pool: web::Data<DatabasePool>) -> HttpResponse {
+    match database_pool.get() {
+        Ok(pooled_connection) => {
+            match web::block(move || Gurl::get_most_recently_added_gurl(&pooled_connection)).await {
+                Ok(vector_of_gurls) => HttpResponse::Ok().json(vector_of_gurls.get(0)),
+                Err(e) => {
+                    log::error!(
+                        "get_most_recently_added_gurl: {}",
+                        GurlError::BlockingError(e)
+                    );
+                    HttpResponse::InternalServerError().finish()
+                }
+            }
+        }
+        Err(e) => {
+            log::error!("get_most_recently_added_gurl: {}", e);
             HttpResponse::InternalServerError().finish()
         }
     }
