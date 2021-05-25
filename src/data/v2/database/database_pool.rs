@@ -6,10 +6,7 @@ pub type DatabasePool = Pool<ConnectionManager<PgConnection>>;
 
 pub fn get(database_url_key: &str) -> Result<DatabasePool, DatabasePoolError> {
     match get_connection_manager(database_url_key) {
-        Ok(manager) => match r2d2::Pool::builder().build(manager) {
-            Ok(database_pool) => Ok(database_pool),
-            Err(e) => Err(DatabasePoolError::DatabasePoolBuilder(e)),
-        },
+        Ok(manager) => r2d2::Pool::builder().build(manager).map_err(Into::into),
         Err(e) => Err(e),
     }
 }
@@ -17,35 +14,9 @@ pub fn get(database_url_key: &str) -> Result<DatabasePool, DatabasePoolError> {
 fn get_connection_manager(
     database_url_key: &str,
 ) -> Result<ConnectionManager<PgConnection>, DatabasePoolError> {
-    match get_database_url(database_url_key) {
-        Ok(database_url) => Ok(ConnectionManager::<PgConnection>::new(database_url)),
-        Err(e) => Err(e),
-    }
-}
-
-fn get_database_url(database_url_key: &str) -> Result<String, DatabasePoolError> {
-    match dotenv::var(database_url_key) {
-        Ok(database_url) => Ok(database_url),
-        Err(e) => Err(DatabasePoolError::DotEnv(e)),
-    }
-}
-
-#[cfg(test)]
-mod get_database_url_test {
-    use crate::data::v2::database::database_pool;
-
-    #[test]
-    fn it_can_return_string() {
-        dotenv::dotenv().ok();
-        let result = database_pool::get_database_url("DATABASE_URL");
-        assert!(result.is_ok());
-    }
-
-    #[test]
-    fn it_can_return_error() {
-        let result = database_pool::get_database_url("this_is_not_an_environment_variable");
-        assert!(result.is_err());
-    }
+    dotenv::var(database_url_key)
+        .map(ConnectionManager::<PgConnection>::new)
+        .map_err(Into::into)
 }
 
 #[cfg(test)]
