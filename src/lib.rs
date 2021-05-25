@@ -16,12 +16,20 @@ pub mod data {
         pub mod database_pool;
         pub mod gurl;
     }
+    pub mod v2 {
+        pub mod database {
+            pub mod database_pool;
+        }
+    }
 }
 
 pub mod models {
     pub mod v1 {
         pub mod gurl;
         pub mod gurl_error;
+    }
+    pub mod v2 {
+        pub mod database_pool_error;
     }
 }
 
