@@ -19,6 +19,10 @@ pub mod data {
     pub mod v2 {
         pub mod database {
             pub mod database_pool;
+            pub mod gurl;
+        }
+        pub mod methods {
+            pub mod gurl;
         }
     }
 }
@@ -29,7 +33,9 @@ pub mod models {
         pub mod gurl_error;
     }
     pub mod v2 {
+        pub mod database_method_error;
         pub mod database_pool_error;
+        pub mod gurl;
     }
 }
 
