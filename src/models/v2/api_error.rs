@@ -31,14 +31,30 @@ impl From<actix_web::error::BlockingError<DatabaseMethodError>> for ApiError {
     }
 }
 
+impl From<GurlRequest> for ApiError {
+    fn from(gurl_request: GurlRequest) -> Self {
+        ApiError::BadRequest(gurl_request)
+    }
+}
+
 // actix_web::ResponseError
 impl actix_web::ResponseError for ApiError {
     fn status_code(&self) -> actix_web::http::StatusCode {
-        actix_web::http::StatusCode::INTERNAL_SERVER_ERROR
+        match self {
+            ApiError::BadRequest(_) => actix_web::http::StatusCode::BAD_REQUEST,
+            ApiError::Blocking(_) => actix_web::http::StatusCode::INTERNAL_SERVER_ERROR,
+        }
     }
 
     fn error_response(&self) -> actix_web::HttpResponse {
         let error = format!("{}", self);
-        actix_web::HttpResponse::InternalServerError().json(ApiErrorResponse { error })
+        match self {
+            ApiError::BadRequest(_) => {
+                actix_web::HttpResponse::BadRequest().json(ApiErrorResponse { error })
+            }
+            ApiError::Blocking(_) => {
+                actix_web::HttpResponse::InternalServerError().json(ApiErrorResponse { error })
+            }
+        }
     }
 }

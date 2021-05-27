@@ -15,8 +15,3 @@ pub struct GurlRequest {
     pub url: Option<String>,
     pub liked: Option<bool>,
 }
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct DeleteGurl {
-    pub id: i32,
-}

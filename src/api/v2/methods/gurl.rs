@@ -24,7 +24,7 @@ pub async fn process_gurl_request(
             )
             .await
         }
-        _ => Err(ApiError::BadRequest(gurl_request)),
+        _ => Err(ApiError::from(gurl_request)),
     }
 }
 
