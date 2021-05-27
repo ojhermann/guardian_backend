@@ -31,7 +31,10 @@ async fn handle_gurl_request(
                 }
             }
         }
-        Err(database_method_error) => database_method_error.error_response(),
+        Err(database_method_error) => {
+            log::error!("{}", database_method_error);
+            database_method_error.error_response()
+        }
     }
 }
 
