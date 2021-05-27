@@ -28,6 +28,7 @@ impl GuardianServer {
                 .wrap(middleware::Logger::default())
                 .configure(api::v1::check_ok::configure)
                 .configure(api::v1::gurl::configure)
+                .configure(api::v2::gurl::configure)
         })
         .bind((&*self.ip_address, self.port))?
         .workers(self.workers)

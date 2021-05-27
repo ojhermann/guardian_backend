@@ -20,4 +20,7 @@ mod api_tests {
         pub mod check_ok_tests;
         pub mod gurl_tests;
     }
+    pub mod v2_tests {
+        pub mod gurl_tests;
+    }
 }
