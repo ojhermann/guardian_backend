@@ -45,7 +45,7 @@ async fn insert(
 ) -> Result<actix_web::HttpResponse, ApiError> {
     actix_web::web::block(move || gurl::insert(url_value, liked, &pooled_connection))
         .await
-        .map(|number_of_insertions| actix_web::HttpResponse::Ok().json(number_of_insertions))
+        .map(|number_of_insertions| actix_web::HttpResponse::Created().json(number_of_insertions))
         .map_err(Into::into)
 }
 
