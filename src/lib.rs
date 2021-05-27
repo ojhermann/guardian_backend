@@ -9,6 +9,13 @@ pub mod api {
         pub mod gurl;
         pub mod paths;
     }
+    pub mod v2 {
+        pub mod gurl;
+        pub mod paths;
+        pub mod methods {
+            pub mod gurl;
+        }
+    }
 }
 
 pub mod data {
@@ -33,6 +40,7 @@ pub mod models {
         pub mod gurl_error;
     }
     pub mod v2 {
+        pub mod api_error;
         pub mod database_method_error;
         pub mod database_pool_error;
         pub mod gurl;

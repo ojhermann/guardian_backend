@@ -1,6 +1,7 @@
 #[derive(Debug)]
 pub enum DatabaseMethodError {
     DieselResult(diesel::result::Error),
+    R2D2(r2d2::Error),
 }
 
 #[derive(Debug, Serialize)]
@@ -15,6 +16,9 @@ impl std::fmt::Display for DatabaseMethodError {
             DatabaseMethodError::DieselResult(e) => {
                 write!(f, "DatabaseMethodError::DieselResult {:?}", e)
             }
+            DatabaseMethodError::R2D2(e) => {
+                write!(f, "DatabaseMethodError::R2D2 {:?}", e)
+            }
         }
     }
 }
@@ -23,6 +27,12 @@ impl std::fmt::Display for DatabaseMethodError {
 impl From<diesel::result::Error> for DatabaseMethodError {
     fn from(e: diesel::result::Error) -> Self {
         DatabaseMethodError::DieselResult(e)
+    }
+}
+
+impl From<r2d2::Error> for DatabaseMethodError {
+    fn from(e: r2d2::Error) -> Self {
+        DatabaseMethodError::R2D2(e)
     }
 }
 

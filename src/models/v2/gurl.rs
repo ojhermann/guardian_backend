@@ -8,3 +8,15 @@ pub struct Gurl {
     pub created_at: chrono::DateTime<chrono::Utc>,
     pub liked: bool,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GurlRequest {
+    pub id: Option<i32>,
+    pub url: Option<String>,
+    pub liked: Option<bool>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct DeleteGurl {
+    pub id: i32,
+}
