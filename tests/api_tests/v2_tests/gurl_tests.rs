@@ -77,3 +77,73 @@ pub async fn gurl_works_with_proper_inputs() {
     let vector_of_gurls: Vec<Gurl> = test::read_body_json(response_get_confirm_delete).await;
     assert_eq!(vector_of_gurls.len(), 0);
 }
+
+#[actix_rt::test]
+pub async fn gurl_can_return_bad_request_api_errors() {
+    dotenv::dotenv().ok();
+
+    let database_pool = database_pool::get("DATABASE_URL");
+
+    let mut guardian_service = test::init_service(
+        App::new()
+            .data(database_pool.clone())
+            .configure(api::v2::gurl::configure),
+    )
+    .await;
+
+    let mut requests_that_will_result_in_api_errors: Vec<GurlRequest> = vec![];
+
+    let ttt_request = GurlRequest {
+        id: Some(1),
+        url: Some("ttt_request_url".to_string()),
+        liked: Some(true),
+    };
+    requests_that_will_result_in_api_errors.push(ttt_request);
+
+    // TTF
+    let ttf_request = GurlRequest {
+        id: Some(1),
+        url: Some("ttt_request_url".to_string()),
+        liked: None,
+    };
+    requests_that_will_result_in_api_errors.push(ttf_request);
+
+    // TFT
+    let tft_request = GurlRequest {
+        id: Some(1),
+        url: None,
+        liked: Some(true),
+    };
+    requests_that_will_result_in_api_errors.push(tft_request);
+
+    // FFT
+    let fft_request = GurlRequest {
+        id: None,
+        url: None,
+        liked: Some(true),
+    };
+    requests_that_will_result_in_api_errors.push(fft_request);
+
+    // FFF
+    let fff_request = GurlRequest {
+        id: None,
+        url: None,
+        liked: None,
+    };
+    requests_that_will_result_in_api_errors.push(fff_request);
+
+    assert_eq!(requests_that_will_result_in_api_errors.len(), 5);
+
+    for gurl_request in requests_that_will_result_in_api_errors {
+        let get_request = test::TestRequest::get()
+            .uri(api::v2::paths::GURL)
+            .set_json(&gurl_request)
+            .to_request();
+        let get_response = test::call_service(&mut guardian_service, get_request).await;
+        assert!(get_response.status().is_client_error());
+        assert_eq!(
+            get_response.status(),
+            actix_web::http::StatusCode::BAD_REQUEST
+        );
+    }
+}
