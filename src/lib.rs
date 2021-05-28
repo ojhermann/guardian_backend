@@ -50,5 +50,10 @@ pub mod models {
 pub mod schema;
 
 pub mod server {
-    pub mod guardian_server;
+    pub mod v1 {
+        pub mod guardian_server;
+    }
+    pub mod v2 {
+        pub mod guardian_server;
+    }
 }

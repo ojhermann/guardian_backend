@@ -1,4 +1,4 @@
-use guardian_backend::server::guardian_server::GuardianServer;
+use guardian_backend::server::v2::guardian_server::GuardianServer;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
