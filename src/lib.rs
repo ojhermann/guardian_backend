@@ -11,9 +11,12 @@ pub mod api {
     }
     pub mod v2 {
         pub mod gurl;
+        pub mod gurl_most_recently_added;
         pub mod paths;
         pub mod methods {
             pub mod gurl;
+            pub mod gurl_most_recently_added;
+            pub mod pooled_connection;
         }
     }
 }

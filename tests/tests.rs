@@ -21,6 +21,7 @@ mod api_tests {
         pub mod gurl_tests;
     }
     pub mod v2_tests {
+        pub mod gurl_most_recently_added_tests;
         pub mod gurl_tests;
     }
 }
