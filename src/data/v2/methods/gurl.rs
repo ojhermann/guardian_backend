@@ -19,6 +19,14 @@ pub fn get(
     database::gurl::get(url_value, pooled_connection).map_err(Into::into)
 }
 
+pub fn get_gurls(
+    start_id: i32,
+    end_id: i32,
+    pooled_connection: &PooledConnection<ConnectionManager<PgConnection>>,
+) -> Result<Vec<Gurl>, DatabaseMethodError> {
+    database::gurl::get_gurls(start_id, end_id, pooled_connection).map_err(Into::into)
+}
+
 pub fn get_most_recently_added_gurl(
     pooled_connection: &PooledConnection<ConnectionManager<PgConnection>>,
 ) -> Result<Option<Gurl>, DatabaseMethodError> {
