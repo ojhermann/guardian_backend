@@ -22,6 +22,17 @@ pub fn get(
         .load(pooled_connection)
 }
 
+pub fn get_gurls(
+    start_id: i32,
+    end_id: i32,
+    pooled_connection: &PooledConnection<ConnectionManager<PgConnection>>,
+) -> QueryResult<Vec<Gurl>> {
+    sql_query("SELECT * FROM public.get_gurls($1, $2)")
+        .bind::<sql_types::Integer, _>(start_id)
+        .bind::<sql_types::Integer, _>(end_id)
+        .load(pooled_connection)
+}
+
 pub fn get_most_recently_added_gurl(
     pooled_connection: &PooledConnection<ConnectionManager<PgConnection>>,
 ) -> QueryResult<Vec<Gurl>> {
