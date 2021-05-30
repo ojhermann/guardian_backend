@@ -8,6 +8,6 @@ pub async fn get(
 ) -> Result<actix_web::HttpResponse, ApiError> {
     actix_web::web::block(move || gurl::get_most_recently_added_gurl(&pooled_connection))
         .await
-        .map(|gurl_vector| actix_web::HttpResponse::Ok().json(gurl_vector))
+        .map(|gurl_maybe| actix_web::HttpResponse::Ok().json(gurl_maybe))
         .map_err(Into::into)
 }
