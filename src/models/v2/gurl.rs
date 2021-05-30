@@ -16,6 +16,12 @@ pub struct GurlRequest {
     pub liked: Option<bool>,
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GurlsRequest {
+    pub start_id: i32,
+    pub end_id: i32,
+}
+
 #[cfg(test)]
 mod gurl_request_tests {
     use crate::models::v2::gurl::GurlRequest;
