@@ -1,5 +1,5 @@
 use crate::api;
-use crate::data::v2::database::database_pool;
+use crate::data::v2::database::{database_pool, migration};
 use actix_web::{middleware, App, HttpServer};
 
 pub struct GuardianServer {
@@ -26,6 +26,12 @@ impl GuardianServer {
             std::process::exit(1)
         }
         let dp = dp_result.unwrap();
+
+        let migration_result = migration::run(&dp);
+        if migration_result.is_err() {
+            log::error!("{}", migration_result.err().unwrap());
+            std::process::exit(1);
+        }
 
         HttpServer::new(move || {
             App::new()

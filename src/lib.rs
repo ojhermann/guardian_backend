@@ -32,6 +32,7 @@ pub mod data {
         pub mod database {
             pub mod database_pool;
             pub mod gurl;
+            pub mod migration;
         }
         pub mod methods {
             pub mod gurl;
