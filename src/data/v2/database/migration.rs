@@ -5,8 +5,8 @@ pub fn run(dp: &DatabasePool) -> Result<(), DatabaseMethodError> {
     match dp.get().map_err(Into::into) {
         Ok(conn) => match diesel_migrations::run_pending_migrations(&conn).map_err(Into::into) {
             Ok(_) => Ok(()),
-            Err(e) => Err(e),
+            Err(migration_error) => Err(migration_error),
         },
-        Err(e) => Err(e),
+        Err(r2d2_error) => Err(r2d2_error),
     }
 }
